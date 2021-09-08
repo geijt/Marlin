@@ -533,6 +533,48 @@
   #define DIO108_PIN 9
   #define DIO108_WPORT PIOB
 
+#elif MB(DAVINCI)
+
+  //92
+  #define DIO92_WPORT PIOB
+  #define DIO92_PIN 22
+  //93
+  #define DIO93_WPORT PIOB
+  #define DIO93_PIN 10
+  //101
+  #define DIO101_WPORT PIOC
+  #define DIO101_PIN 27
+  //108
+  #define DIO108_WPORT PIOC
+  #define DIO108_PIN 20
+  //117
+  #define DIO117_WPORT PIOB
+  #define DIO117_PIN 2
+  //118
+  #define DIO118_WPORT PIOB
+  #define DIO118_PIN 3
+  //119
+  #define DIO119_WPORT PIOB
+  #define DIO119_PIN 4
+  //120
+  #define DIO120_WPORT PIOB
+  #define DIO120_PIN 5
+  //121
+  #define DIO121_WPORT PIOB
+  #define DIO121_PIN 6
+  //122
+  #define DIO122_WPORT PIOB
+  #define DIO122_PIN 7
+  //123
+  #define DIO123_WPORT PIOB
+  #define DIO123_PIN 8
+  //124
+  #define DIO124_WPORT PIOB
+  #define DIO124_PIN 9
+  //125
+  #define DIO125_WPORT PIOB
+  #define DIO125_PIN 24
+
 #else // !ARDUINO_SAM_ARCHIM
 
   #define DIO92_PIN 5

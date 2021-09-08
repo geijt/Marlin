@@ -285,6 +285,7 @@
 #define BOARD_ALLIGATOR               3025  // Alligator Board R2
 #define BOARD_CNCONTROLS_15D          3026  // Cartesio CN Controls V15 on DUE
 #define BOARD_KRATOS32                3027  // K.3D Kratos32 (Arduino Due Shield)
+#define BOARD_DAVINCI                 3028  // DaVinci
 
 //
 // SAM3X8C ARM Cortex M3

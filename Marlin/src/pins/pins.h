@@ -454,6 +454,8 @@
   #include "sam/pins_CNCONTROLS_15D.h"          // SAM3X8E                                env:DUE env:DUE_USB
 #elif MB(KRATOS32)
   #include "sam/pins_KRATOS32.h"                // SAM3X8E                                env:DUE env:DUE_USB
+#elif MB(DAVINCI)
+  #include "sam/pins_DAVINCI.h"                 // SAM3X8E                                env:DAVINCI
 
 //
 // STM32 ARM Cortex-M0
