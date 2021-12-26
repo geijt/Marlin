@@ -2355,7 +2355,7 @@
 // RepRapDiscount FULL GRAPHIC Smart Controller
 // https://reprap.org/wiki/RepRapDiscount_Full_Graphic_Smart_Controller
 //
-//#define REPRAP_DISCOUNT_FULL_GRAPHIC_SMART_CONTROLLER
+#define REPRAP_DISCOUNT_FULL_GRAPHIC_SMART_CONTROLLER
 
 //
 // K.3D Full Graphic Smart Controller
@@ -2860,6 +2860,14 @@
 
 // Support for PCA9533 PWM LED driver
 //#define PCA9533
+
+// Support for PCA9685 PWM driver
+#define PCA9685
+#if ENABLED(PCA9685)
+  #define PCA9685_ADDRESS (byte)0x40 // I2C address
+  #define PCA9685_FREQUENCY      200 // PWM frequency 1-3500Hz , 200 is default
+  #define PCA9685_M43_START_PIN  100 // pins over this number are mapped onto PCA9685
+#endif
 
 /**
  * RGB LED / LED Strip Control

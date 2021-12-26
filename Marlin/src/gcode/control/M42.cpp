@@ -27,6 +27,10 @@
 #include "../gcode.h"
 #include "../../MarlinCore.h" // for pin_is_protected
 
+#if ENABLED(PCA9685)
+  #include "../../feature/pca9685.h"
+#endif
+
 #if HAS_FAN
   #include "../../module/temperature.h"
 #endif
@@ -118,18 +122,30 @@ void GcodeSuite::M42() {
     return;
   }
 
-  // An OUTPUT_OPEN_DRAIN should not be changed to normal OUTPUT (STM32)
-  // Use M42 Px M1/5 S0/1 to set the output type and then set value
-  #ifndef OUTPUT_OPEN_DRAIN
-    pinMode(pin, OUTPUT);
+  #if ENABLED(PCA9685)
+    if (pin_index < PCA9685_M43_START_PIN) {
   #endif
-  extDigitalWrite(pin, pin_status);
 
-  #ifdef ARDUINO_ARCH_STM32
-    // A simple I/O will be set to 0 by analogWrite()
-    if (pin_status <= 1 && !PWM_PIN(pin)) return;
+    // An OUTPUT_OPEN_DRAIN should not be changed to normal OUTPUT (STM32)
+    // Use M42 Px M1/5 S0/1 to set the output type and then set value
+    #ifndef OUTPUT_OPEN_DRAIN
+      pinMode(pin, OUTPUT);
+    #endif
+    extDigitalWrite(pin, pin_status);
+
+    #ifdef ARDUINO_ARCH_STM32
+      // A simple I/O will be set to 0 by analogWrite()
+      if (pin_status <= 1 && !PWM_PIN(pin)) return;
+    #endif
+    analogWrite(pin, pin_status);
+
+  #if ENABLED(PCA9685)
+    }
+    else if (pin_index < PCA9685_M43_START_PIN+16) {
+      pca9685_set_port_PWM8(pin_index-PCA9685_M43_START_PIN, pin_status);
+    }
+    else { SERIAL_ECHO_START(); SERIAL_ECHOLNPGM(" M42 pin ",pin_index," (PCA9685) out of range."); }
   #endif
-  analogWrite(pin, pin_status);
 }
 
 #endif // DIRECT_PIN_CONTROL
