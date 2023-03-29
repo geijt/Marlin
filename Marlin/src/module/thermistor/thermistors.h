@@ -109,8 +109,14 @@ typedef struct { raw_adc_t value; celsius_t celsius; } temp_entry_t;
 #if ANY_THERMISTOR_IS(13) // beta25 = 4100 K, R25 = 100 kOhm, Pull-up = 4.7 kOhm, "Hisens"
   #include "thermistor_13.h"
 #endif
+#if ANY_THERMISTOR_IS(14) // // 100K B57560G1104F, Calculated using 4.7kohm pullup, voltage divider math, and manufacturer provided temp/resistancebeta25 = 4100 K, R25 = 100 kOhm, Pull-up = 4.7 kOhm, "Hisens"
+  #include "thermistor_14.h"
+#endif
 #if ANY_THERMISTOR_IS(15) // JGAurora A5 thermistor calibration
   #include "thermistor_15.h"
+#endif
+#if ANY_THERMISTOR_IS(16) // // 50k bed thermistor for 3DP1000. Calculated using 4.7kohm pullup, voltage divider math, and manufacturer provided temp/resistance
+  #include "thermistor_16.h"
 #endif
 #if ANY_THERMISTOR_IS(17) // Dagoma NTC 100k white thermistor
   #include "thermistor_17.h"
