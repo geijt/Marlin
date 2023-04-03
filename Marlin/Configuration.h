@@ -98,7 +98,6 @@
   #define TEMP_0_CS_PIN 66
   #define TEMP_1_CS_PIN 67
   #define TEMP_2_CS_PIN 68
-  #define TEMP_3_CS_PIN 69
 
   #define TEMP_3_PIN 15  // use TEMP_1_PIN
  
