@@ -89,6 +89,29 @@
 #ifndef MOTHERBOARD
   #define MOTHERBOARD BOARD_RAMPS_14_EEB
   #define FIL_RUNOUT_PIN 44
+
+  //#HEATER_0_PIN is set to MOSFET_A_PIN default 10, to chnage set #define MOSFET_A_PIN {new}
+  //#HEATER_1_PIN 10 set to MOSFET_B_PIN default 9, to chnage set #define MOSFET_B_PIN {new}
+  #define HEATER_2_PIN 7
+  #define HEATER_3_PIN 6
+  
+  #define TEMP_0_CS_PIN 66
+  #define TEMP_1_CS_PIN 67
+  #define TEMP_2_CS_PIN 68
+  #define TEMP_3_CS_PIN 69
+
+  #define TEMP_3_PIN 15  // use TEMP_1_PIN
+ 
+  #define E1_STEP_PIN                         26 // same as E0
+  #define E1_DIR_PIN                          28
+  #define E1_ENABLE_PIN                       24
+  #define E2_STEP_PIN                         26 // same as E0
+  #define E2_DIR_PIN                          28
+  #define E2_ENABLE_PIN                       24
+  #define E3_STEP_PIN                         36 // E1
+  #define E3_DIR_PIN                          34
+  #define E3_ENABLE_PIN                       30
+
 #endif
 
 /**
@@ -175,8 +198,8 @@
 //#define W_DRIVER_TYPE  A4988
 #define E0_DRIVER_TYPE A4988
 #define E1_DRIVER_TYPE A4988
-//#define E2_DRIVER_TYPE A4988
-//#define E3_DRIVER_TYPE A4988
+#define E2_DRIVER_TYPE A4988
+#define E3_DRIVER_TYPE A4988
 //#define E4_DRIVER_TYPE A4988
 //#define E5_DRIVER_TYPE A4988
 //#define E6_DRIVER_TYPE A4988
@@ -228,7 +251,7 @@
 
 // This defines the number of extruders
 // :[0, 1, 2, 3, 4, 5, 6, 7, 8]
-#define EXTRUDERS 2
+#define EXTRUDERS 4  //(3 for pellet, and 1 normal)
 
 // Generally expected filament diameter (1.75, 2.85, 3.0, ...). Used for Volumetric, Filament Width Sensor, etc.
 #define DEFAULT_NOMINAL_FILAMENT_DIA 3.0
@@ -548,10 +571,10 @@
  *   999 : Dummy Table that ALWAYS reads 100°C or the temperature defined below.
  *
  */
-#define TEMP_SENSOR_0 14
-#define TEMP_SENSOR_1 14
-#define TEMP_SENSOR_2 0
-#define TEMP_SENSOR_3 0
+#define TEMP_SENSOR_0 -2
+#define TEMP_SENSOR_1 -2
+#define TEMP_SENSOR_2 -2
+#define TEMP_SENSOR_3 14
 #define TEMP_SENSOR_4 0
 #define TEMP_SENSOR_5 0
 #define TEMP_SENSOR_6 0
@@ -1231,21 +1254,21 @@
  * following movement settings. If fewer factors are given than the
  * total number of extruders, the last value applies to the rest.
  */
-//#define DISTINCT_E_FACTORS
+#define DISTINCT_E_FACTORS
 
 /**
  * Default Axis Steps Per Unit (linear=steps/mm, rotational=steps/°)
  * Override with M92
  *                                      X, Y, Z [, I [, J [, K...]]], E0 [, E1[, E2...]]
  */
-#define DEFAULT_AXIS_STEPS_PER_UNIT   { 160, 160, 2000, 450 }
+#define DEFAULT_AXIS_STEPS_PER_UNIT   { 160, 160, 2000, 450, 450, 450 ,450 }
 
 /**
  * Default Max Feed Rate (linear=mm/s, rotational=°/s)
  * Override with M203
  *                                      X, Y, Z [, I [, J [, K...]]], E0 [, E1[, E2...]]
  */
-#define DEFAULT_MAX_FEEDRATE          { 120, 120, 25, 25 }
+#define DEFAULT_MAX_FEEDRATE          { 120, 120, 25, 25, 25, 25, 25}
 
 //#define LIMITED_MAX_FR_EDITING        // Limit edit via M203 or LCD to DEFAULT_MAX_FEEDRATE * 2
 #if ENABLED(LIMITED_MAX_FR_EDITING)
