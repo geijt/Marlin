@@ -88,19 +88,19 @@
 // Choose the name from boards.h that matches your setup
 #ifndef MOTHERBOARD
   #define MOTHERBOARD BOARD_RAMPS_14_EEB
-  #define FIL_RUNOUT_PIN 44
+  #define FIL_RUNOUT_PIN 44 // Aux-2
 
   //#HEATER_0_PIN is set to MOSFET_A_PIN default 10, to chnage set #define MOSFET_A_PIN {new}
   //#HEATER_1_PIN is set to MOSFET_B_PIN default 9, to chnage set #define MOSFET_B_PIN {new}
-  #define HEATER_2_PIN 40
-  #define HEATER_3_PIN 42
-  
-  #define TEMP_0_CS_PIN 53
-  #define TEMP_1_CS_PIN 67
-  #define TEMP_2_CS_PIN 68
+  #define HEATER_2_PIN 40 // Aux-2
+  #define HEATER_3_PIN 42 // Aux-2
+
+  #define TEMP_0_CS_PIN 57 // Aux-1
+  #define TEMP_1_CS_PIN 58 // Aux-1
+  #define TEMP_2_CS_PIN 59 // Aux-2
 
   #define TEMP_3_PIN 15  // use TEMP_1_PIN
- 
+
   #define E1_STEP_PIN                         26 // same as E0
   #define E1_DIR_PIN                          28
   #define E1_ENABLE_PIN                       24
