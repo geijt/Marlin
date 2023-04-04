@@ -92,8 +92,8 @@
 
   //#HEATER_0_PIN is set to MOSFET_A_PIN default 10, to chnage set #define MOSFET_A_PIN {new}
   //#HEATER_1_PIN is set to MOSFET_B_PIN default 9, to chnage set #define MOSFET_B_PIN {new}
-  #define HEATER_2_PIN 7
-  #define HEATER_3_PIN 6
+  #define HEATER_2_PIN 40
+  #define HEATER_3_PIN 42
   
   #define TEMP_0_CS_PIN 66
   #define TEMP_1_CS_PIN 67
