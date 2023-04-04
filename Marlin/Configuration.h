@@ -91,7 +91,7 @@
   #define FIL_RUNOUT_PIN 44
 
   //#HEATER_0_PIN is set to MOSFET_A_PIN default 10, to chnage set #define MOSFET_A_PIN {new}
-  //#HEATER_1_PIN 10 set to MOSFET_B_PIN default 9, to chnage set #define MOSFET_B_PIN {new}
+  //#HEATER_1_PIN is set to MOSFET_B_PIN default 9, to chnage set #define MOSFET_B_PIN {new}
   #define HEATER_2_PIN 7
   #define HEATER_3_PIN 6
   
