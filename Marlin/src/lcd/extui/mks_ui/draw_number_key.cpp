@@ -95,12 +95,14 @@ static void disp_key_value() {
     case ZAcceleration:
       itoa(planner.settings.max_acceleration_mm_per_s2[Z_AXIS], public_buf_m, 10);
       break;
-    case E0Acceleration:
-      itoa(planner.settings.max_acceleration_mm_per_s2[E_AXIS], public_buf_m, 10);
-      break;
-    case E1Acceleration:
-      itoa(planner.settings.max_acceleration_mm_per_s2[E_AXIS_N(1)], public_buf_m, 10);
-      break;
+    #if HAS_EXTRUDERS
+      case E0Acceleration:
+        itoa(planner.settings.max_acceleration_mm_per_s2[E_AXIS], public_buf_m, 10);
+        break;
+      case E1Acceleration:
+        itoa(planner.settings.max_acceleration_mm_per_s2[E_AXIS_N(1)], public_buf_m, 10);
+        break;
+    #endif
     case XMaxFeedRate:
       dtostrf(planner.settings.max_feedrate_mm_s[X_AXIS], 1, 1, public_buf_m);
       break;
@@ -110,12 +112,14 @@ static void disp_key_value() {
     case ZMaxFeedRate:
       dtostrf(planner.settings.max_feedrate_mm_s[Z_AXIS], 1, 1, public_buf_m);
       break;
-    case E0MaxFeedRate:
-      dtostrf(planner.settings.max_feedrate_mm_s[E_AXIS], 1, 1, public_buf_m);
-      break;
-    case E1MaxFeedRate:
-      dtostrf(planner.settings.max_feedrate_mm_s[E_AXIS_N(1)], 1, 1, public_buf_m);
-      break;
+    #if HAS_EXTRUDERS
+      case E0MaxFeedRate:
+        dtostrf(planner.settings.max_feedrate_mm_s[E_AXIS], 1, 1, public_buf_m);
+        break;
+      case E1MaxFeedRate:
+        dtostrf(planner.settings.max_feedrate_mm_s[E_AXIS_N(1)], 1, 1, public_buf_m);
+        break;
+    #endif
 
     case XJerk:
       #if HAS_CLASSIC_JERK
@@ -132,11 +136,13 @@ static void disp_key_value() {
         dtostrf(planner.max_jerk.z, 1, 1, public_buf_m);
       #endif
       break;
-    case EJerk:
-      #if HAS_CLASSIC_JERK
-        dtostrf(planner.max_jerk.e, 1, 1, public_buf_m);
-      #endif
-      break;
+    #if HAS_EXTRUDERS
+      case EJerk:
+        #if HAS_CLASSIC_JERK
+          dtostrf(planner.max_jerk.e, 1, 1, public_buf_m);
+        #endif
+        break;
+    #endif
 
     case Xstep:
       dtostrf(planner.settings.axis_steps_per_mm[X_AXIS], 1, 1, public_buf_m);
@@ -149,13 +155,15 @@ static void disp_key_value() {
       dtostrf(planner.settings.axis_steps_per_mm[Z_AXIS], 1, 1, public_buf_m);
 
       break;
-    case E0step:
-      dtostrf(planner.settings.axis_steps_per_mm[E_AXIS], 1, 1, public_buf_m);
+    #if HAS_EXTRUDERS
+      case E0step:
+        dtostrf(planner.settings.axis_steps_per_mm[E_AXIS], 1, 1, public_buf_m);
 
-      break;
-    case E1step:
-      dtostrf(planner.settings.axis_steps_per_mm[E_AXIS_N(1)], 1, 1, public_buf_m);
-      break;
+        break;
+      case E1step:
+        dtostrf(planner.settings.axis_steps_per_mm[E_AXIS_N(1)], 1, 1, public_buf_m);
+        break;
+    #endif
 
     case Xcurrent:
       #if AXIS_IS_TMC(X)
@@ -300,22 +308,30 @@ static void set_value_confirm() {
     case XAcceleration:  planner.settings.max_acceleration_mm_per_s2[X_AXIS] = atof(key_value); break;
     case YAcceleration:  planner.settings.max_acceleration_mm_per_s2[Y_AXIS] = atof(key_value); break;
     case ZAcceleration:  planner.settings.max_acceleration_mm_per_s2[Z_AXIS] = atof(key_value); break;
-    case E0Acceleration: planner.settings.max_acceleration_mm_per_s2[E_AXIS] = atof(key_value); break;
-    case E1Acceleration: planner.settings.max_acceleration_mm_per_s2[E_AXIS_N(1)] = atof(key_value); break;
+    #if HAS_EXTRUDERS
+      case E0Acceleration: planner.settings.max_acceleration_mm_per_s2[E_AXIS] = atof(key_value); break;
+      case E1Acceleration: planner.settings.max_acceleration_mm_per_s2[E_AXIS_N(1)] = atof(key_value); break;
+    #endif
     case XMaxFeedRate:   planner.settings.max_feedrate_mm_s[X_AXIS] = atof(key_value); break;
     case YMaxFeedRate:   planner.settings.max_feedrate_mm_s[Y_AXIS] = atof(key_value); break;
     case ZMaxFeedRate:   planner.settings.max_feedrate_mm_s[Z_AXIS] = atof(key_value); break;
-    case E0MaxFeedRate:  planner.settings.max_feedrate_mm_s[E_AXIS] = atof(key_value); break;
-    case E1MaxFeedRate:  planner.settings.max_feedrate_mm_s[E_AXIS_N(1)] = atof(key_value); break;
+    #if HAS_EXTRUDERS
+      case E0MaxFeedRate:  planner.settings.max_feedrate_mm_s[E_AXIS] = atof(key_value); break;
+      case E1MaxFeedRate:  planner.settings.max_feedrate_mm_s[E_AXIS_N(1)] = atof(key_value); break;
+    #endif
     case XJerk: TERN_(HAS_CLASSIC_JERK, planner.max_jerk.x = atof(key_value)); break;
     case YJerk: TERN_(HAS_CLASSIC_JERK, planner.max_jerk.y = atof(key_value)); break;
     case ZJerk: TERN_(HAS_CLASSIC_JERK, planner.max_jerk.z = atof(key_value)); break;
-    case EJerk: TERN_(HAS_CLASSIC_JERK, planner.max_jerk.e = atof(key_value)); break;
+    #if HAS_EXTRUDERS
+      case EJerk: TERN_(HAS_CLASSIC_JERK, planner.max_jerk.e = atof(key_value)); break;
+    #endif
     case Xstep:  planner.settings.axis_steps_per_mm[X_AXIS] = atof(key_value); planner.refresh_positioning(); break;
     case Ystep:  planner.settings.axis_steps_per_mm[Y_AXIS] = atof(key_value); planner.refresh_positioning(); break;
     case Zstep:  planner.settings.axis_steps_per_mm[Z_AXIS] = atof(key_value); planner.refresh_positioning(); break;
-    case E0step: planner.settings.axis_steps_per_mm[E_AXIS] = atof(key_value); planner.refresh_positioning(); break;
-    case E1step: planner.settings.axis_steps_per_mm[E_AXIS_N(1)] = atof(key_value); planner.refresh_positioning(); break;
+    #if HAS_EXTRUDERS
+      case E0step: planner.settings.axis_steps_per_mm[E_AXIS] = atof(key_value); planner.refresh_positioning(); break;
+      case E1step: planner.settings.axis_steps_per_mm[E_AXIS_N(1)] = atof(key_value); planner.refresh_positioning(); break;
+    #endif
     case Xcurrent:
       #if AXIS_IS_TMC(X)
         stepperX.rms_current(atoi(key_value));

@@ -276,15 +276,9 @@
   #define THERMAL_PROTECTION_BOARD   // Halt the printer if the board sensor leaves the temp range below.
   #define BOARD_MINTEMP           8  // (°C)
   #define BOARD_MAXTEMP          70  // (°C)
-  //#define TEMP_BOARD_PIN -1        // Board temp sensor pin override.
-#endif
-
-//
-// SoC Sensor options
-//
-#if TEMP_SENSOR_SOC
-  #define THERMAL_PROTECTION_SOC     // Halt the printer if the SoC sensor leaves the temp range below.
-  #define SOC_MAXTEMP            85  // (°C)
+  #ifndef TEMP_BOARD_PIN
+    //#define TEMP_BOARD_PIN -1      // Board temp sensor pin, if not set in pins file.
+  #endif
 #endif
 
 /**
@@ -327,7 +321,7 @@
    * and/or decrease WATCH_TEMP_INCREASE. WATCH_TEMP_INCREASE should not be set
    * below 2.
    */
-  #define WATCH_TEMP_PERIOD  40               // Seconds
+  #define WATCH_TEMP_PERIOD  20               // Seconds
   #define WATCH_TEMP_INCREASE 2               // Degrees Celsius
 #endif
 
@@ -584,9 +578,6 @@
 
   // Use TEMP_SENSOR_BOARD as a trigger for enabling the controller fan
   //#define CONTROLLER_FAN_MIN_BOARD_TEMP 40  // (°C) Turn on the fan if the board reaches this temperature
-
-  // Use TEMP_SENSOR_SOC as a trigger for enabling the controller fan
-  //#define CONTROLLER_FAN_MIN_SOC_TEMP 40  // (°C) Turn on the fan if the SoC reaches this temperature
 
   //#define CONTROLLER_FAN_EDITABLE         // Enable M710 configurable settings
   #if ENABLED(CONTROLLER_FAN_EDITABLE)
@@ -1187,7 +1178,7 @@
 
 // @section motion
 
-#define AXIS_RELATIVE_MODES { false, false, false, false }
+#define AXIS_RELATIVE_MODES { false, false, false }
 
 // Add a Duplicate option for well-separated conjoined nozzles
 //#define MULTI_NOZZLE_DUPLICATION
@@ -1791,7 +1782,7 @@
    *
    * [1] On AVR an interrupt-capable pin is best for UHS3 compatibility.
    */
-  //#define USB_FLASH_DRIVE_SUPPORT
+  #define USB_FLASH_DRIVE_SUPPORT
   #if ENABLED(USB_FLASH_DRIVE_SUPPORT)
     /**
      * USB Host Shield Library
@@ -2502,7 +2493,7 @@
 // The number of linear moves that can be in the planner at once.
 // The value of BLOCK_BUFFER_SIZE must be a power of 2 (e.g., 8, 16, 32)
 #if BOTH(HAS_MEDIA, DIRECT_STEPPING)
-  #define BLOCK_BUFFER_SIZE  8
+  #define BLOCK_BUFFER_SIZE  16
 #elif HAS_MEDIA
   #define BLOCK_BUFFER_SIZE 16
 #else
@@ -3230,7 +3221,7 @@
    * STEALTHCHOP_(XY|Z|E) must be enabled to use HYBRID_THRESHOLD.
    * M913 X/Y/Z/E to live tune the setting
    */
-  //#define HYBRID_THRESHOLD
+  #define HYBRID_THRESHOLD
 
   #define X_HYBRID_THRESHOLD     100  // [mm/s]
   #define X2_HYBRID_THRESHOLD    100

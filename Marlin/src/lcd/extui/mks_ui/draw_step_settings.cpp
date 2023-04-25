@@ -61,12 +61,14 @@ static void event_handler(lv_obj_t *obj, lv_event_t event) {
     case ID_STEP_Z:
       value = Zstep;
       break;
-    case ID_STEP_E0:
-      value = E0step;
-      break;
-    case ID_STEP_E1:
-      value = E1step;
-      break;
+    #if HAS_EXTRUDERS
+      case ID_STEP_E0:
+        value = E0step;
+        break;
+      case ID_STEP_E1:
+        value = E1step;
+        break;
+    #endif
     case ID_STEP_UP:
       uiCfg.para_ui_page = false;
       lv_draw_step_settings();
@@ -92,14 +94,18 @@ void lv_draw_step_settings() {
     dtostrf(planner.settings.axis_steps_per_mm[Z_AXIS], 1, 1, public_buf_l);
     lv_screen_menu_item_1_edit(scr, machine_menu.Z_Steps, PARA_UI_POS_X, PARA_UI_POS_Y * 3, event_handler, ID_STEP_Z, 2, public_buf_l);
 
-    dtostrf(planner.settings.axis_steps_per_mm[E_AXIS], 1, 1, public_buf_l);
-    lv_screen_menu_item_1_edit(scr, machine_menu.E0_Steps, PARA_UI_POS_X, PARA_UI_POS_Y * 4, event_handler, ID_STEP_E0, 3, public_buf_l);
+    #if HAS_EXTRUDERS
+      dtostrf(planner.settings.axis_steps_per_mm[E_AXIS], 1, 1, public_buf_l);
+      lv_screen_menu_item_1_edit(scr, machine_menu.E0_Steps, PARA_UI_POS_X, PARA_UI_POS_Y * 4, event_handler, ID_STEP_E0, 3, public_buf_l);
+    #endif
 
     lv_big_button_create(scr, "F:/bmp_back70x40.bin", machine_menu.next, PARA_UI_TURN_PAGE_POS_X, PARA_UI_TURN_PAGE_POS_Y, event_handler, ID_STEP_DOWN, true);
   }
   else {
-    dtostrf(planner.settings.axis_steps_per_mm[E_AXIS_N(1)], 1, 1, public_buf_l);
-    lv_screen_menu_item_1_edit(scr, machine_menu.E1_Steps, PARA_UI_POS_X, PARA_UI_POS_Y, event_handler, ID_STEP_E1, 0, public_buf_l);
+    #if HAS_EXTRUDERS
+      dtostrf(planner.settings.axis_steps_per_mm[E_AXIS_N(1)], 1, 1, public_buf_l);
+      lv_screen_menu_item_1_edit(scr, machine_menu.E1_Steps, PARA_UI_POS_X, PARA_UI_POS_Y, event_handler, ID_STEP_E1, 0, public_buf_l);
+    #endif
 
     lv_big_button_create(scr, "F:/bmp_back70x40.bin", machine_menu.previous, PARA_UI_TURN_PAGE_POS_X, PARA_UI_TURN_PAGE_POS_Y, event_handler, ID_STEP_UP, true);
   }

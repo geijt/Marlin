@@ -62,12 +62,14 @@ static void event_handler(lv_obj_t *obj, lv_event_t event) {
     case ID_FEED_Z:
       value = ZMaxFeedRate;
       break;
-    case ID_FEED_E0:
-      value = E0MaxFeedRate;
-      break;
-    case ID_FEED_E1:
-      value = E1MaxFeedRate;
-      break;
+    #if HAS_EXTRUDERS
+      case ID_FEED_E0:
+        value = E0MaxFeedRate;
+        break;
+      case ID_FEED_E1:
+        value = E1MaxFeedRate;
+        break;
+    #endif
     case ID_FEED_UP:
       uiCfg.para_ui_page = false;
       lv_draw_max_feedrate_settings();
@@ -93,14 +95,18 @@ void lv_draw_max_feedrate_settings() {
     dtostrf(planner.settings.max_feedrate_mm_s[Z_AXIS], 1, 1, public_buf_l);
     lv_screen_menu_item_1_edit(scr, machine_menu.ZMaxFeedRate, PARA_UI_POS_X, PARA_UI_POS_Y * 3, event_handler, ID_FEED_Z, 2, public_buf_l);
 
-    dtostrf(planner.settings.max_feedrate_mm_s[E_AXIS], 1, 1, public_buf_l);
-    lv_screen_menu_item_1_edit(scr, machine_menu.E0MaxFeedRate, PARA_UI_POS_X, PARA_UI_POS_Y * 4, event_handler, ID_FEED_E0, 3, public_buf_l);
+    #if HAS_EXTRUDERS
+      dtostrf(planner.settings.max_feedrate_mm_s[E_AXIS], 1, 1, public_buf_l);
+      lv_screen_menu_item_1_edit(scr, machine_menu.E0MaxFeedRate, PARA_UI_POS_X, PARA_UI_POS_Y * 4, event_handler, ID_FEED_E0, 3, public_buf_l);
+    #endif
 
     lv_big_button_create(scr, "F:/bmp_back70x40.bin", machine_menu.next, PARA_UI_TURN_PAGE_POS_X, PARA_UI_TURN_PAGE_POS_Y, event_handler, ID_FEED_DOWN, true);
   }
   else {
-    dtostrf(planner.settings.max_feedrate_mm_s[E_AXIS_N(1)], 1, 1, public_buf_l);
-    lv_screen_menu_item_1_edit(scr, machine_menu.E1MaxFeedRate, PARA_UI_POS_X, PARA_UI_POS_Y, event_handler, ID_FEED_E1, 0, public_buf_l);
+    #if HAS_EXTRUDERS
+      dtostrf(planner.settings.max_feedrate_mm_s[E_AXIS_N(1)], 1, 1, public_buf_l);
+      lv_screen_menu_item_1_edit(scr, machine_menu.E1MaxFeedRate, PARA_UI_POS_X, PARA_UI_POS_Y, event_handler, ID_FEED_E1, 0, public_buf_l);
+    #endif
 
     lv_big_button_create(scr, "F:/bmp_back70x40.bin", machine_menu.previous, PARA_UI_TURN_PAGE_POS_X, PARA_UI_TURN_PAGE_POS_Y, event_handler, ID_FEED_UP, true);
   }

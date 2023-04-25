@@ -85,16 +85,18 @@ static void event_handler(lv_obj_t *obj, lv_event_t event) {
       lv_clear_acceleration_settings();
       lv_draw_number_key();
       break;
-    case ID_ACCE_E0:
-      value = E0Acceleration;
-      lv_clear_acceleration_settings();
-      lv_draw_number_key();
-      break;
-    case ID_ACCE_E1:
-      value = E1Acceleration;
-      lv_clear_acceleration_settings();
-      lv_draw_number_key();
-      break;
+    #if HAS_EXTRUDERS
+      case ID_ACCE_E0:
+        value = E0Acceleration;
+        lv_clear_acceleration_settings();
+        lv_draw_number_key();
+        break;
+      case ID_ACCE_E1:
+        value = E1Acceleration;
+        lv_clear_acceleration_settings();
+        lv_draw_number_key();
+        break;
+    #endif
     case ID_ACCE_UP:
       uiCfg.para_ui_page = false;
       lv_clear_acceleration_settings();

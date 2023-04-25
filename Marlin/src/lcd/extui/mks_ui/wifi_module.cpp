@@ -826,7 +826,9 @@ uint8_t Explore_Disk(const char * const path, const uint8_t recu_level, const bo
   const int16_t fileCnt = card.get_num_items();
 
   MediaFile file;
-  MediaFile *diveDir;
+  #if ENABLED(LONG_FILENAME_HOST_SUPPORT)
+    MediaFile *diveDir;
+  #endif
   for (int16_t i = 0; i < fileCnt; i++) {
     card.selectFileByIndexSorted(i);
 

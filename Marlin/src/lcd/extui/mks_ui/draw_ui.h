@@ -362,25 +362,33 @@ typedef enum {
   XAcceleration,
   YAcceleration,
   ZAcceleration,
-  E0Acceleration,
-  E1Acceleration,
+  #if HAS_EXTRUDERS
+    E0Acceleration,
+    E1Acceleration,
+  #endif
 
   XMaxFeedRate,
   YMaxFeedRate,
   ZMaxFeedRate,
-  E0MaxFeedRate,
-  E1MaxFeedRate,
+  #if HAS_EXTRUDERS
+    E0MaxFeedRate,
+    E1MaxFeedRate,
+  #endif
 
   XJerk,
   YJerk,
   ZJerk,
-  EJerk,
+  #if HAS_EXTRUDERS
+    EJerk,
+  #endif 
 
   Xstep,
   Ystep,
   Zstep,
-  E0step,
-  E1step,
+  #if HAS_EXTRUDERS
+    E0step,
+    E1step,
+  #endif
 
   Xcurrent,
   Ycurrent,

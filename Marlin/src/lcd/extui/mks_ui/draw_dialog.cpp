@@ -102,8 +102,10 @@ static void btn_ok_event_cb(lv_obj_t *btn, lv_event_t event) {
         card.openFileRead(cur_name);
         if (card.isFileOpen()) {
           feedrate_percentage = 100;
-          planner.flow_percentage[0] = 100;
-          planner.e_factor[0] = planner.flow_percentage[0] * 0.01f;
+          #if HAS_EXTRUDERS
+            planner.flow_percentage[0] = 100;
+            planner.e_factor[0] = planner.flow_percentage[0] * 0.01f;
+          #endif
           #if HAS_MULTI_EXTRUDER
             planner.flow_percentage[1] = 100;
             planner.e_factor[1] = planner.flow_percentage[1] * 0.01f;
@@ -189,7 +191,9 @@ static void btn_cancel_event_cb(lv_obj_t *btn, lv_event_t event) {
     TERN_(ADVANCED_PAUSE_FEATURE, pause_menu_response = PAUSE_RESPONSE_RESUME_PRINT);
   }
   else if (DIALOG_IS(TYPE_FILAMENT_LOAD_HEAT, TYPE_FILAMENT_UNLOAD_HEAT, TYPE_FILAMENT_HEAT_LOAD_COMPLETED, TYPE_FILAMENT_HEAT_UNLOAD_COMPLETED)) {
-    thermalManager.setTargetHotend(uiCfg.hotendTargetTempBak, uiCfg.extruderIndex);
+    #if HAS_EXTRUDERS
+      thermalManager.setTargetHotend(uiCfg.hotendTargetTempBak, uiCfg.extruderIndex);
+    #endif
     goto_previous_ui();
   }
   else if (DIALOG_IS(TYPE_FILAMENT_LOADING, TYPE_FILAMENT_UNLOADING)) {
@@ -201,7 +205,9 @@ static void btn_cancel_event_cb(lv_obj_t *btn, lv_event_t event) {
     uiCfg.filament_loading_time_cnt    = 0;
     uiCfg.filament_unloading_time_flg  = false;
     uiCfg.filament_unloading_time_cnt  = 0;
-    thermalManager.setTargetHotend(uiCfg.hotendTargetTempBak, uiCfg.extruderIndex);
+    #if HAS_EXTRUDERS
+      thermalManager.setTargetHotend(uiCfg.hotendTargetTempBak, uiCfg.extruderIndex);
+    #endif
     goto_previous_ui();
   }
   else {

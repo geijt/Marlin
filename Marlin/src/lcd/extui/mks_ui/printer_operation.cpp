@@ -69,7 +69,9 @@ void printer_state_polling() {
           gcode.process_subcommands_now(public_buf_l);
         }
         uiCfg.print_state = PAUSED;
-        uiCfg.current_e_position_bak = current_position.e;
+        #if HAS_EXTRUDERS
+          uiCfg.current_e_position_bak = current_position.e;
+        #endif
 
         gCfgItems.pause_reprint = true;
         update_spi_flash();

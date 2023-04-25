@@ -60,14 +60,14 @@
 // @section info
 
 // Author info of this build printed to the host during boot and M115
-#define STRING_CONFIG_H_AUTHOR "(none, default config)" // Who made the changes.
+#define STRING_CONFIG_H_AUTHOR "Chaosmstr" // Who made the changes.
 //#define CUSTOM_VERSION_FILE Version.h // Path from the root directory (no quotes)
 
 // @section machine
 
 // Choose the name from boards.h that matches your setup
 #ifndef MOTHERBOARD
-  #define MOTHERBOARD BOARD_RAMPS_14_EFB
+  #define MOTHERBOARD BOARD_MKS_ROBIN_NANO_V3
 #endif
 
 /**
@@ -78,7 +78,7 @@
  *
  * :[-1, 0, 1, 2, 3, 4, 5, 6, 7]
  */
-#define SERIAL_PORT 0
+#define SERIAL_PORT -1
 
 /**
  * Serial Port Baud Rate
@@ -138,9 +138,9 @@
  *          TMC5130, TMC5130_STANDALONE, TMC5160, TMC5160_STANDALONE
  * :['A4988', 'A5984', 'DRV8825', 'LV8729', 'TB6560', 'TB6600', 'TMC2100', 'TMC2130', 'TMC2130_STANDALONE', 'TMC2160', 'TMC2160_STANDALONE', 'TMC2208', 'TMC2208_STANDALONE', 'TMC2209', 'TMC2209_STANDALONE', 'TMC26X', 'TMC26X_STANDALONE', 'TMC2660', 'TMC2660_STANDALONE', 'TMC5130', 'TMC5130_STANDALONE', 'TMC5160', 'TMC5160_STANDALONE']
  */
-#define X_DRIVER_TYPE  A4988
-#define Y_DRIVER_TYPE  A4988
-#define Z_DRIVER_TYPE  A4988
+#define X_DRIVER_TYPE  TMC2209
+#define Y_DRIVER_TYPE  TMC2209
+#define Z_DRIVER_TYPE  TMC2209
 //#define X2_DRIVER_TYPE A4988
 //#define Y2_DRIVER_TYPE A4988
 //#define Z2_DRIVER_TYPE A4988
@@ -152,7 +152,7 @@
 //#define U_DRIVER_TYPE  A4988
 //#define V_DRIVER_TYPE  A4988
 //#define W_DRIVER_TYPE  A4988
-#define E0_DRIVER_TYPE A4988
+//#define E0_DRIVER_TYPE TMC2209
 //#define E1_DRIVER_TYPE A4988
 //#define E2_DRIVER_TYPE A4988
 //#define E3_DRIVER_TYPE A4988
@@ -207,7 +207,7 @@
 
 // This defines the number of extruders
 // :[0, 1, 2, 3, 4, 5, 6, 7, 8]
-#define EXTRUDERS 1
+#define EXTRUDERS 0
 
 // Generally expected filament diameter (1.75, 2.85, 3.0, ...). Used for Volumetric, Filament Width Sensor, etc.
 #define DEFAULT_NOMINAL_FILAMENT_DIA 1.75
@@ -432,67 +432,78 @@
 // @section temperature
 
 /**
- * Temperature Sensors:
+ * --NORMAL IS 4.7kΩ PULLUP!-- 1kΩ pullup can be used on hotend sensor, using correct resistor and table
  *
- * NORMAL IS 4.7kΩ PULLUP! Hotend sensors can use 1kΩ pullup with correct resistor and table.
+ * Temperature sensors available:
  *
- * ================================================================
+ *  SPI RTD/Thermocouple Boards - IMPORTANT: Read the NOTE below!
+ *  -------
+ *    -5 : MAX31865 with Pt100/Pt1000, 2, 3, or 4-wire  (only for sensors 0-1)
+ *                  NOTE: You must uncomment/set the MAX31865_*_OHMS_n defines below.
+ *    -3 : MAX31855 with Thermocouple, -200°C to +700°C (only for sensors 0-1)
+ *    -2 : MAX6675  with Thermocouple, 0°C to +700°C    (only for sensors 0-1)
+ *
+ *  NOTE: Ensure TEMP_n_CS_PIN is set in your pins file for each TEMP_SENSOR_n using an SPI Thermocouple. By default,
+ *        Hardware SPI on the default serial bus is used. If you have also set TEMP_n_SCK_PIN and TEMP_n_MISO_PIN,
+ *        Software SPI will be used on those ports instead. You can force Hardware SPI on the default bus in the
+ *        Configuration_adv.h file. At this time, separate Hardware SPI buses for sensors are not supported.
+ *
+ *  Analog Themocouple Boards
+ *  -------
+ *    -4 : AD8495 with Thermocouple
+ *    -1 : AD595  with Thermocouple
+ *
  *  Analog Thermistors - 4.7kΩ pullup - Normal
- * ================================================================
- *     1 : 100kΩ EPCOS - Best choice for EPCOS thermistors
- *   331 : 100kΩ Same as #1, but 3.3V scaled for MEGA
- *   332 : 100kΩ Same as #1, but 3.3V scaled for DUE
- *     2 : 200kΩ ATC Semitec 204GT-2
- *   202 : 200kΩ Copymaster 3D
- *     3 : ???Ω  Mendel-parts thermistor
- *     4 : 10kΩ  Generic Thermistor !! DO NOT use for a hotend - it gives bad resolution at high temp. !!
- *     5 : 100kΩ ATC Semitec 104GT-2/104NT-4-R025H42G - Used in ParCan, J-Head, and E3D, SliceEngineering 300°C
- *   501 : 100kΩ Zonestar - Tronxy X3A
- *   502 : 100kΩ Zonestar - used by hot bed in Zonestar Průša P802M
- *   503 : 100kΩ Zonestar (Z8XM2) Heated Bed thermistor
- *   504 : 100kΩ Zonestar P802QR2 (Part# QWG-104F-B3950) Hotend Thermistor
- *   505 : 100kΩ Zonestar P802QR2 (Part# QWG-104F-3950) Bed Thermistor
- *   512 : 100kΩ RPW-Ultra hotend
- *     6 : 100kΩ EPCOS - Not as accurate as table #1 (created using a fluke thermocouple)
- *     7 : 100kΩ Honeywell 135-104LAG-J01
- *    71 : 100kΩ Honeywell 135-104LAF-J01
- *     8 : 100kΩ Vishay 0603 SMD NTCS0603E3104FXT
- *     9 : 100kΩ GE Sensing AL03006-58.2K-97-G1
- *    10 : 100kΩ RS PRO 198-961
- *    11 : 100kΩ Keenovo AC silicone mats, most Wanhao i3 machines - beta 3950, 1%
- *    12 : 100kΩ Vishay 0603 SMD NTCS0603E3104FXT (#8) - calibrated for Makibox hot bed
- *    13 : 100kΩ Hisens up to 300°C - for "Simple ONE" & "All In ONE" hotend - beta 3950, 1%
- *    15 : 100kΩ Calibrated for JGAurora A5 hotend
- *    18 : 200kΩ ATC Semitec 204GT-2 Dagoma.Fr - MKS_Base_DKU001327
- *    22 : 100kΩ GTM32 Pro vB - hotend - 4.7kΩ pullup to 3.3V and 220Ω to analog input
- *    23 : 100kΩ GTM32 Pro vB - bed - 4.7kΩ pullup to 3.3v and 220Ω to analog input
- *    30 : 100kΩ Kis3d Silicone heating mat 200W/300W with 6mm precision cast plate (EN AW 5083) NTC100K - beta 3950
- *    60 : 100kΩ Maker's Tool Works Kapton Bed Thermistor - beta 3950
- *    61 : 100kΩ Formbot/Vivedino 350°C Thermistor - beta 3950
- *    66 : 4.7MΩ Dyze Design / Trianglelab T-D500 500°C High Temperature Thermistor
- *    67 : 500kΩ SliceEngineering 450°C Thermistor
- *    68 : PT100 Smplifier board from Dyze Design
- *    70 : 100kΩ bq Hephestos 2
- *    75 : 100kΩ Generic Silicon Heat Pad with NTC100K MGB18-104F39050L32
- *  2000 : 100kΩ Ultimachine Rambo TDK NTCG104LH104KT1 NTC100K motherboard Thermistor
+ *  -------
+ *     1 : 100kΩ  EPCOS - Best choice for EPCOS thermistors
+ *   331 : 100kΩ  Same as #1, but 3.3V scaled for MEGA
+ *   332 : 100kΩ  Same as #1, but 3.3V scaled for DUE
+ *     2 : 200kΩ  ATC Semitec 204GT-2
+ *   202 : 200kΩ  Copymaster 3D
+ *     3 : ???Ω   Mendel-parts thermistor
+ *     4 : 10kΩ   Generic Thermistor !! DO NOT use for a hotend - it gives bad resolution at high temp. !!
+ *     5 : 100kΩ  ATC Semitec 104GT-2/104NT-4-R025H42G - Used in ParCan, J-Head, and E3D, SliceEngineering 300°C
+ *   501 : 100kΩ  Zonestar - Tronxy X3A
+ *   502 : 100kΩ  Zonestar - used by hot bed in Zonestar Průša P802M
+ *   503 : 100kΩ  Zonestar (Z8XM2) Heated Bed thermistor
+ *   504 : 100kΩ  Zonestar P802QR2 (Part# QWG-104F-B3950) Hotend Thermistor
+ *   505 : 100kΩ  Zonestar P802QR2 (Part# QWG-104F-3950) Bed Thermistor
+ *   512 : 100kΩ  RPW-Ultra hotend
+ *     6 : 100kΩ  EPCOS - Not as accurate as table #1 (created using a fluke thermocouple)
+ *     7 : 100kΩ  Honeywell 135-104LAG-J01
+ *    71 : 100kΩ  Honeywell 135-104LAF-J01
+ *     8 : 100kΩ  Vishay 0603 SMD NTCS0603E3104FXT
+ *     9 : 100kΩ  GE Sensing AL03006-58.2K-97-G1
+ *    10 : 100kΩ  RS PRO 198-961
+ *    11 : 100kΩ  Keenovo AC silicone mats, most Wanhao i3 machines - beta 3950, 1%
+ *    12 : 100kΩ  Vishay 0603 SMD NTCS0603E3104FXT (#8) - calibrated for Makibox hot bed
+ *    13 : 100kΩ  Hisens up to 300°C - for "Simple ONE" & "All In ONE" hotend - beta 3950, 1%
+ *    15 : 100kΩ  Calibrated for JGAurora A5 hotend
+ *    18 : 200kΩ  ATC Semitec 204GT-2 Dagoma.Fr - MKS_Base_DKU001327
+ *    22 : 100kΩ  GTM32 Pro vB - hotend - 4.7kΩ pullup to 3.3V and 220Ω to analog input
+ *    23 : 100kΩ  GTM32 Pro vB - bed - 4.7kΩ pullup to 3.3v and 220Ω to analog input
+ *    30 : 100kΩ  Kis3d Silicone heating mat 200W/300W with 6mm precision cast plate (EN AW 5083) NTC100K - beta 3950
+ *    60 : 100kΩ  Maker's Tool Works Kapton Bed Thermistor - beta 3950
+ *    61 : 100kΩ  Formbot/Vivedino 350°C Thermistor - beta 3950
+ *    66 : 4.7MΩ  Dyze Design / Trianglelab T-D500 500°C High Temperature Thermistor
+ *    67 : 500kΩ  SliceEngineering 450°C Thermistor
+ *    68 : PT100 amplifier board from Dyze Design
+ *    70 : 100kΩ  bq Hephestos 2
+ *    75 : 100kΩ  Generic Silicon Heat Pad with NTC100K MGB18-104F39050L32
+ *  2000 : 100kΩ  Ultimachine Rambo TDK NTCG104LH104KT1 NTC100K motherboard Thermistor
  *
- * ================================================================
- *  Analog Thermistors - 1kΩ pullup
- *   Atypical, and requires changing out the 4.7kΩ pullup for 1kΩ.
- *   (but gives greater accuracy and more stable PID)
- * ================================================================
- *    51 : 100kΩ EPCOS (1kΩ pullup)
- *    52 : 200kΩ ATC Semitec 204GT-2 (1kΩ pullup)
- *    55 : 100kΩ ATC Semitec 104GT-2 - Used in ParCan & J-Head (1kΩ pullup)
+ *  Analog Thermistors - 1kΩ pullup - Atypical, and requires changing out the 4.7kΩ pullup for 1kΩ.
+ *  -------                           (but gives greater accuracy and more stable PID)
+ *    51 : 100kΩ  EPCOS (1kΩ pullup)
+ *    52 : 200kΩ  ATC Semitec 204GT-2 (1kΩ pullup)
+ *    55 : 100kΩ  ATC Semitec 104GT-2 - Used in ParCan & J-Head (1kΩ pullup)
  *
- * ================================================================
  *  Analog Thermistors - 10kΩ pullup - Atypical
- * ================================================================
- *    99 : 100kΩ Found on some Wanhao i3 machines with a 10kΩ pull-up resistor
+ *  -------
+ *    99 : 100kΩ  Found on some Wanhao i3 machines with a 10kΩ pull-up resistor
  *
- * ================================================================
  *  Analog RTDs (Pt100/Pt1000)
- * ================================================================
+ *  -------
  *   110 : Pt100  with 1kΩ pullup (atypical)
  *   147 : Pt100  with 4.7kΩ pullup
  *  1010 : Pt1000 with 1kΩ pullup (atypical)
@@ -504,36 +515,17 @@
  *                NOTE: ADC pins are not 5V tolerant. Not recommended because it's possible to damage the CPU by going over 500°C.
  *   201 : Pt100  with circuit in Overlord, similar to Ultimainboard V2.x
  *
- * ================================================================
- *  SPI RTD/Thermocouple Boards
- * ================================================================
- *    -5 : MAX31865 with Pt100/Pt1000, 2, 3, or 4-wire  (only for sensors 0-1)
- *                  NOTE: You must uncomment/set the MAX31865_*_OHMS_n defines below.
- *    -3 : MAX31855 with Thermocouple, -200°C to +700°C (only for sensors 0-1)
- *    -2 : MAX6675  with Thermocouple, 0°C to +700°C    (only for sensors 0-1)
- *
- *  NOTE: Ensure TEMP_n_CS_PIN is set in your pins file for each TEMP_SENSOR_n using an SPI Thermocouple. By default,
- *        Hardware SPI on the default serial bus is used. If you have also set TEMP_n_SCK_PIN and TEMP_n_MISO_PIN,
- *        Software SPI will be used on those ports instead. You can force Hardware SPI on the default bus in the
- *        Configuration_adv.h file. At this time, separate Hardware SPI buses for sensors are not supported.
- *
- * ================================================================
- *  Analog Thermocouple Boards
- * ================================================================
- *    -4 : AD8495 with Thermocouple
- *    -1 : AD595  with Thermocouple
- *
- * ================================================================
  *  Custom/Dummy/Other Thermal Sensors
- * ================================================================
+ *  ------
  *     0 : not used
  *  1000 : Custom - Specify parameters in Configuration_adv.h
  *
  *   !!! Use these for Testing or Development purposes. NEVER for production machine. !!!
  *   998 : Dummy Table that ALWAYS reads 25°C or the temperature defined below.
  *   999 : Dummy Table that ALWAYS reads 100°C or the temperature defined below.
+ *
  */
-#define TEMP_SENSOR_0 1
+#define TEMP_SENSOR_0 0
 #define TEMP_SENSOR_1 0
 #define TEMP_SENSOR_2 0
 #define TEMP_SENSOR_3 0
@@ -546,7 +538,6 @@
 #define TEMP_SENSOR_CHAMBER 0
 #define TEMP_SENSOR_COOLER 0
 #define TEMP_SENSOR_BOARD 0
-#define TEMP_SENSOR_SOC 0
 #define TEMP_SENSOR_REDUNDANT 0
 
 // Dummy thermistor constant temperature readings, for use with 998 and 999
@@ -822,14 +813,14 @@
  *
  * *** IT IS HIGHLY RECOMMENDED TO LEAVE THIS OPTION ENABLED! ***
  */
-#define PREVENT_COLD_EXTRUSION
+//#define PREVENT_COLD_EXTRUSION
 #define EXTRUDE_MINTEMP 170
 
 /**
  * Prevent a single extrusion longer than EXTRUDE_MAXLENGTH.
  * Note: For Bowden Extruders make this large enough to allow load/unload.
  */
-#define PREVENT_LENGTHY_EXTRUDE
+//#define PREVENT_LENGTHY_EXTRUDE
 #define EXTRUDE_MAXLENGTH 200
 
 //===========================================================================
@@ -849,7 +840,7 @@
  * details can be tuned in Configuration_adv.h
  */
 
-#define THERMAL_PROTECTION_HOTENDS // Enable thermal protection for all extruders
+//#define THERMAL_PROTECTION_HOTENDS // Enable thermal protection for all extruders
 #define THERMAL_PROTECTION_BED     // Enable thermal protection for the heated bed
 #define THERMAL_PROTECTION_CHAMBER // Enable thermal protection for the heated chamber
 #define THERMAL_PROTECTION_COOLER  // Enable thermal protection for the laser cooling
@@ -1224,14 +1215,14 @@
  * Override with M92
  *                                      X, Y, Z [, I [, J [, K...]]], E0 [, E1[, E2...]]
  */
-#define DEFAULT_AXIS_STEPS_PER_UNIT   { 80, 80, 400, 500 }
+#define DEFAULT_AXIS_STEPS_PER_UNIT   { 400, 400, 1500 }
 
 /**
  * Default Max Feed Rate (linear=mm/s, rotational=°/s)
  * Override with M203
  *                                      X, Y, Z [, I [, J [, K...]]], E0 [, E1[, E2...]]
  */
-#define DEFAULT_MAX_FEEDRATE          { 300, 300, 5, 25 }
+#define DEFAULT_MAX_FEEDRATE          { 300, 300, 5 }
 
 //#define LIMITED_MAX_FR_EDITING        // Limit edit via M203 or LCD to DEFAULT_MAX_FEEDRATE * 2
 #if ENABLED(LIMITED_MAX_FR_EDITING)
@@ -1244,7 +1235,7 @@
  * Override with M201
  *                                      X, Y, Z [, I [, J [, K...]]], E0 [, E1[, E2...]]
  */
-#define DEFAULT_MAX_ACCELERATION      { 3000, 3000, 100, 10000 }
+#define DEFAULT_MAX_ACCELERATION      { 3000, 3000, 3000 }
 
 //#define LIMITED_MAX_ACCEL_EDITING     // Limit edit via M201 or LCD to DEFAULT_MAX_ACCELERATION * 2
 #if ENABLED(LIMITED_MAX_ACCEL_EDITING)
@@ -1759,8 +1750,8 @@
 // @section geometry
 
 // The size of the printable area
-#define X_BED_SIZE 200
-#define Y_BED_SIZE 200
+#define X_BED_SIZE 300
+#define Y_BED_SIZE 375
 
 // Travel limits (linear=mm, rotational=°) after homing, corresponding to endstop positions.
 #define X_MIN_POS 0
@@ -1768,7 +1759,7 @@
 #define Z_MIN_POS 0
 #define X_MAX_POS X_BED_SIZE
 #define Y_MAX_POS Y_BED_SIZE
-#define Z_MAX_POS 200
+#define Z_MAX_POS 75
 //#define I_MIN_POS 0
 //#define I_MAX_POS 50
 //#define J_MIN_POS 0
@@ -2029,7 +2020,7 @@
    */
   #define ENABLE_LEVELING_FADE_HEIGHT
   #if ENABLED(ENABLE_LEVELING_FADE_HEIGHT)
-    #define DEFAULT_LEVELING_FADE_HEIGHT 10.0 // (mm) Default fade height.
+    #define DEFAULT_LEVELING_FADE_HEIGHT 0.0 // (mm) Default fade height.
   #endif
 
   /**
@@ -2091,7 +2082,7 @@
 
   //#define MESH_EDIT_GFX_OVERLAY   // Display a graphics overlay while editing the mesh
 
-  #define MESH_INSET 1              // Set Mesh bounds as an inset region of the bed
+  #define MESH_INSET 0              // Set Mesh bounds as an inset region of the bed
   #define GRID_MAX_POINTS_X 10      // Don't use more than 15 points per axis, implementation limited.
   #define GRID_MAX_POINTS_Y GRID_MAX_POINTS_X
 
@@ -2133,7 +2124,7 @@
   //=================================== Mesh ==================================
   //===========================================================================
 
-  #define MESH_INSET 10          // Set Mesh bounds as an inset region of the bed
+  #define MESH_INSET 0          // Set Mesh bounds as an inset region of the bed
   #define GRID_MAX_POINTS_X 3    // Don't use more than 7 points per axis, implementation limited.
   #define GRID_MAX_POINTS_Y GRID_MAX_POINTS_X
 
@@ -2218,7 +2209,7 @@
  * - Allows Z homing only when XY positions are known and trusted.
  * - If stepper drivers sleep, XY homing may be required again before Z homing.
  */
-//#define Z_SAFE_HOMING
+#define Z_SAFE_HOMING
 
 #if ENABLED(Z_SAFE_HOMING)
   #define Z_SAFE_HOMING_X_POINT X_CENTER  // X point for Z homing
@@ -2305,7 +2296,7 @@
  *   M501 - Read settings from EEPROM. (i.e., Throw away unsaved changes)
  *   M502 - Revert settings to "factory" defaults. (Follow with M500 to init the EEPROM.)
  */
-//#define EEPROM_SETTINGS     // Persistent storage with M500 and M501
+#define EEPROM_SETTINGS     // Persistent storage with M500 and M501
 //#define DISABLE_M503        // Saves ~2700 bytes of flash. Disable for release!
 #define EEPROM_CHITCHAT       // Give feedback on EEPROM commands. Disable to save PROGMEM.
 #define EEPROM_BOOT_SILENT    // Keep M503 quiet and only give errors during first load
@@ -2582,7 +2573,7 @@
  *
  * :['JAPANESE', 'WESTERN', 'CYRILLIC']
  */
-#define DISPLAY_CHARSET_HD44780 JAPANESE
+#define DISPLAY_CHARSET_HD44780 WESTERN
 
 /**
  * Info Screen Style (0:Classic, 1:Průša)
@@ -2597,7 +2588,7 @@
  * SD Card support is disabled by default. If your controller has an SD slot,
  * you must uncomment the following option or it won't work.
  */
-//#define SDSUPPORT
+#define SDSUPPORT
 
 /**
  * SD CARD: ENABLE CRC
@@ -2621,13 +2612,13 @@
 // This option overrides the default number of encoder pulses needed to
 // produce one step. Should be increased for high-resolution encoders.
 //
-//#define ENCODER_PULSES_PER_STEP 4
+#define ENCODER_PULSES_PER_STEP 4
 
 //
 // Use this option to override the number of step signals required to
 // move between next/prev menu items.
 //
-//#define ENCODER_STEPS_PER_MENU_ITEM 1
+#define ENCODER_STEPS_PER_MENU_ITEM 2
 
 /**
  * Encoder Direction Options
@@ -2667,7 +2658,7 @@
 //
 // This option increases encoder samples to filter out phantom encoder clicks caused by EMI noise.
 //
-//#define ENCODER_NOISE_FILTER
+#define ENCODER_NOISE_FILTER
 #if ENABLED(ENCODER_NOISE_FILTER)
   #define ENCODER_SAMPLES 10
 #endif
@@ -3188,7 +3179,7 @@
 // 480x320, 3.5", SPI Display with Rotary Encoder from MKS
 // Usually paired with MKS Robin Nano V2 & V3
 //
-//#define MKS_TS35_V2_0
+#define MKS_TS35_V2_0
 
 //
 // 320x240, 2.4", FSMC Display From MKS
@@ -3291,7 +3282,7 @@
  */
 //#define TFT_CLASSIC_UI
 //#define TFT_COLOR_UI
-//#define TFT_LVGL_UI
+#define TFT_LVGL_UI
 
 #if ENABLED(TFT_COLOR_UI)
   /**
@@ -3307,7 +3298,7 @@
 #endif
 
 #if ENABLED(TFT_LVGL_UI)
-  //#define MKS_WIFI_MODULE // MKS WiFi module
+  #define MKS_WIFI_MODULE // MKS WiFi module
 #endif
 
 /**
@@ -3336,7 +3327,7 @@
 //
 // Touch Screen Settings
 //
-//#define TOUCH_SCREEN
+#define TOUCH_SCREEN
 #if ENABLED(TOUCH_SCREEN)
   #define BUTTON_DELAY_EDIT      50 // (ms) Button repeat delay for edit screens
   #define BUTTON_DELAY_MENU     250 // (ms) Button repeat delay for menus

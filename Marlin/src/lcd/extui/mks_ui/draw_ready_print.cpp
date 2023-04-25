@@ -49,7 +49,10 @@
 
 extern lv_group_t*  g;
 static lv_obj_t *scr;
-static lv_obj_t *buttonExt1, *labelExt1, *buttonFanstate, *labelFan;
+static lv_obj_t *buttonFanstate, *labelFan;
+#if HAS_HOTEND
+ static lv_obj_t *buttonExt1, *labelExt1;
+#endif 
 
 #if HAS_MULTI_HOTEND
   static lv_obj_t *labelExt2;
@@ -107,7 +110,9 @@ void disp_det_error() {
 
 lv_obj_t *e1, *e2, *e3, *bed;
 void mks_disp_test() {
-  char buf[30] = {0};
+  #if ANY(HAS_HOTEND,HAS_MULTI_HOTEND,HAS_HEATED_BED)
+    char buf[30] = {0};
+  #endif
   #if HAS_HOTEND
     sprintf_P(buf, PSTR("e1:%d"), thermalManager.wholeDegHotend(0));
     lv_label_set_text(e1, buf);
@@ -123,7 +128,9 @@ void mks_disp_test() {
 }
 
 void lv_draw_ready_print() {
-  char buf[30] = {0};
+  #if HAS_HOTEND
+    char buf[30] = {0};
+  #endif
   lv_obj_t *buttonTool;
 
   disp_state_stack._disp_index = 0;

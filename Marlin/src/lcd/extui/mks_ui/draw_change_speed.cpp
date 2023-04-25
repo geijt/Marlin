@@ -45,7 +45,7 @@ enum {
   ID_C_RETURN
 };
 
-static bool editingFlowrate;
+static bool editingFlowrate TERN_(HAS_EXTRUDERS,false);
 
 static void event_handler(lv_obj_t *obj, lv_event_t event) {
   if (event != LV_EVENT_RELEASED) return;
@@ -57,17 +57,19 @@ static void event_handler(lv_obj_t *obj, lv_event_t event) {
         else
           feedrate_percentage = MAX_EXT_SPEED_PERCENT;
       }
-      else {
-        if (planner.flow_percentage[0] < MAX_EXT_SPEED_PERCENT - uiCfg.stepPrintSpeed)
-          planner.flow_percentage[0] += uiCfg.stepPrintSpeed;
-        else
-          planner.flow_percentage[0] = MAX_EXT_SPEED_PERCENT;
-        planner.refresh_e_factor(0);
-        #if HAS_MULTI_EXTRUDER
-          planner.flow_percentage[1] = planner.flow_percentage[0];
-          planner.refresh_e_factor(1);
-        #endif
-      }
+      #if HAS_EXTRUDERS
+        else {
+          if (planner.flow_percentage[0] < MAX_EXT_SPEED_PERCENT - uiCfg.stepPrintSpeed)
+            planner.flow_percentage[0] += uiCfg.stepPrintSpeed;
+          else
+            planner.flow_percentage[0] = MAX_EXT_SPEED_PERCENT;
+          planner.refresh_e_factor(0);
+          #if HAS_MULTI_EXTRUDER
+            planner.flow_percentage[1] = planner.flow_percentage[0];
+            planner.refresh_e_factor(1);
+          #endif
+        }
+      #endif
       disp_print_speed();
       break;
     case ID_C_DEC:
@@ -77,17 +79,19 @@ static void event_handler(lv_obj_t *obj, lv_event_t event) {
         else
           feedrate_percentage = MIN_EXT_SPEED_PERCENT;
       }
-      else {
-        if (planner.flow_percentage[0] > MIN_EXT_SPEED_PERCENT + uiCfg.stepPrintSpeed)
-          planner.flow_percentage[0] -= uiCfg.stepPrintSpeed;
-        else
-          planner.flow_percentage[0] = MIN_EXT_SPEED_PERCENT;
-        planner.refresh_e_factor(0);
-        #if HAS_MULTI_EXTRUDER
-          planner.flow_percentage[1] = planner.flow_percentage[0];
-          planner.refresh_e_factor(1);
-        #endif
-      }
+      #if HAS_EXTRUDERS
+        else {
+          if (planner.flow_percentage[0] > MIN_EXT_SPEED_PERCENT + uiCfg.stepPrintSpeed)
+            planner.flow_percentage[0] -= uiCfg.stepPrintSpeed;
+          else
+            planner.flow_percentage[0] = MIN_EXT_SPEED_PERCENT;
+          planner.refresh_e_factor(0);
+          #if HAS_MULTI_EXTRUDER
+            planner.flow_percentage[1] = planner.flow_percentage[0];
+            planner.refresh_e_factor(1);
+          #endif
+        }
+      #endif
       disp_print_speed();
       break;
     case ID_C_MOVE:
@@ -184,14 +188,19 @@ void disp_print_speed() {
 
   int16_t val;
   const char *lbl;
-  if (editingFlowrate) {
-    lbl = speed_menu.extrude_speed;
-    val = planner.flow_percentage[0];
-  }
-  else {
+
+  #if HAS_EXTRUDERS
+    if (editingFlowrate) {
+      lbl = speed_menu.extrude_speed;
+      val = planner.flow_percentage[0];
+    }
+    else {
+  #endif
     lbl = speed_menu.move_speed;
     val = feedrate_percentage;
-  }
+  #if HAS_EXTRUDERS
+    }
+  #endif
   strcpy(public_buf_l, lbl);
   strcat_P(public_buf_l, PSTR(": "));
   sprintf_P(buf, PSTR("%d%%"), val);
