@@ -849,7 +849,7 @@ namespace LanguageNarrow_en {
   LSTR MSG_BOTTOM_LEFT                    = _UxGT("Touch Bottom Left");
   LSTR MSG_TOP_RIGHT                      = _UxGT("Touch Top Right");
   LSTR MSG_BOTTOM_RIGHT                   = _UxGT("Touch Bottom Right");
-  LSTR MSG_CALIBRATION_SCREEN             = _UxGT("Touch Screen Calibration");
+  LSTR MSG_TOUCH_CALIBRATION              = _UxGT("Touch Calibration");
   LSTR MSG_CALIBRATION_COMPLETED          = _UxGT("Calibration Completed");
   LSTR MSG_CALIBRATION_FAILED             = _UxGT("Calibration Failed");
 

@@ -449,7 +449,7 @@ void MarlinUI::clear_lcd() {
     touch.clear();
 
     if (stage < CALIBRATION_SUCCESS) {
-      tft_string.set(GET_TEXT(MSG_CALIBRATION_SCREEN));
+      tft_string.set(GET_TEXT(MSG_TOUCH_CALIBRATION));
       tft.canvas(0, 0, TFT_WIDTH, tft_string.font_height());
       tft.set_background(COLOR_BACKGROUND);
       tft.add_text(tft_string.center(TFT_WIDTH), 0, COLOR_MENU_TEXT, tft_string);
