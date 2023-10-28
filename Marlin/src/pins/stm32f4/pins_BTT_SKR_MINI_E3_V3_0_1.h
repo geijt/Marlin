@@ -83,10 +83,6 @@
   #define POWER_LOSS_PIN                    PC13  // Power Loss Detection: PWR-DET
 #endif
 
-#ifndef NEOPIXEL_PIN
-  #define NEOPIXEL_PIN                      PA14  // LED driving pin
-#endif
-
 #ifndef PS_ON_PIN
   #define PS_ON_PIN                         PC14  // Power Supply Control
 #endif
@@ -184,7 +180,9 @@
    * All pins are labeled as printed on DWIN PCB. Connect TX-TX, A-A and so on.
    */
 
-  #error "DWIN_CREALITY_LCD requires a custom cable, see diagram above this line. Comment out this line to continue."
+  #ifndef NO_CONTROLLER_CUSTOM_WIRING_WARNING
+    #error "CAUTION! DWIN_CREALITY_LCD requires a custom cable, see diagram above this line. (Define NO_CONTROLLER_CUSTOM_WIRING_WARNING to suppress this warning.)"
+  #endif
 
   #define BEEPER_PIN                 EXP1_02_PIN
   #define BTN_EN1                    EXP1_08_PIN
@@ -274,8 +272,72 @@
 
     #endif
 
+  #elif ENABLED(FYSETC_MINI_12864_2_1)
+
+    #ifndef NO_CONTROLLER_CUSTOM_WIRING_WARNING
+      #error "CAUTION! FYSETC_MINI_12864_2_1 / MKS_MINI_12864_V3 / BTT_MINI_12864 requires wiring modifications. See 'pins_BTT_SKR_MINI_E3_common.h' for details. (Define NO_CONTROLLER_CUSTOM_WIRING_WARNING to suppress this warning.)"
+    #endif
+
+    /**
+     * FYSETC_MINI_12864_2_1 / MKS_MINI_12864_V3 / BTT_MINI_12864 display pinout
+     *
+     *       Board                      Display
+     *       ------                     ------
+     * PB15 | 1  2 | PB14       (BEEP) |10  9 | BTN_ENC
+     * PA9  | 3  4 | RESET      LCD_CS | 8  7 | LCD A0
+     * PA10 | 5  6 | PB4       LCD_RST | 6  5 | RED
+     * PD2  | 7  8 | PC0       (GREEN) | 4  3 | (BLUE)
+     * GND  | 9 10 | 5V            GND | 2  1 | 5V
+     *       ------                     ------
+     *        EXP1                       EXP1
+     *
+     *            ---                   ------
+     *       RST | 1 |          (MISO) |10  9 | SCK
+     * (RX2) PA3 | 2 |         BTN_EN1 | 8  7 | (SS)
+     * (TX2) PA2 | 3 |         BTN_EN2 | 6  5 | MOSI
+     *       GND | 4 |            (CD) | 4  3 | (RST)
+     *        5V | 5 |           (GND) | 2  1 | (KILL)
+     *            ---                   ------
+     *            TFT                    EXP2
+     *
+     * Needs custom cable:
+     *
+     *    Board             Display
+     *
+     *   EXP1-10 ---------- EXP1-1   5V
+     *   EXP1-9 ----------- EXP1-2   GND
+     *   EXP1-8 ----------- EXP2-6   EN2
+     *   EXP1-7 ----------- EXP1-5   RED
+     *   EXP1-6 ----------- EXP2-8   EN1
+     *   EXP1-5 ----------- n/c
+     *   EXP1-4 ----------- EXP1-6   RESET
+     *   EXP1-3 ----------- EXP1-8   LCD_CS
+     *   EXP1-2 ----------- EXP1-9   ENC
+     *   EXP1-1 ----------- EXP1-7   LCD_A0
+     *
+     *    TFT-2 ----------- EXP2-5   MOSI
+     *    TFT-3 ----------- EXP2-9   SCK
+     *
+     * for backlight configuration see steps 2 (V2.1) and 3 in https://wiki.fysetc.com/Mini12864_Panel/
+     */
+
+    #define LCD_BACKLIGHT_PIN               -1
+    #define NEOPIXEL_PIN             EXP1_07_PIN
+    #define LCD_CONTRAST                     255
+
+    #define DOGLCD_CS                EXP1_03_PIN
+    #define DOGLCD_A0                EXP1_01_PIN
+    #define DOGLCD_SCK                      PA2
+    #define DOGLCD_MOSI                     PA3
+
+    #define BTN_ENC                  EXP1_02_PIN
+    #define BTN_EN1                  EXP1_06_PIN
+    #define BTN_EN2                  EXP1_08_PIN
+
+    #define FORCE_SOFT_SPI
+
   #else
-    #error "Only CR10_STOCKDISPLAY, ZONESTAR_LCD, ENDER2_STOCKDISPLAY, MKS_MINI_12864, and TFTGLCD_PANEL_(SPI|I2C) are currently supported on the BIGTREE_SKR_MINI_E3."
+    #error "Only CR10_STOCKDISPLAY, ZONESTAR_LCD, ENDER2_STOCKDISPLAY, MKS_MINI_12864, FYSETC_MINI_12864_2_1, and TFTGLCD_PANEL_(SPI|I2C) are currently supported on the BIGTREE_SKR_MINI_E3."
   #endif
 
 #endif // HAS_WIRED_LCD
@@ -348,3 +410,7 @@
 #define SD_SCK_PIN                          PA5
 #define SD_MISO_PIN                         PA6
 #define SD_MOSI_PIN                         PA7
+
+#ifndef NEOPIXEL_PIN
+  #define NEOPIXEL_PIN                      PA14  // LED driving pin
+#endif
