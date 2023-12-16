@@ -229,6 +229,12 @@ typedef struct { raw_adc_t value; celsius_t celsius; } temp_entry_t;
 // Custom/Dummy/Other Thermal Sensors
 //
 
+#if ANY_THERMISTOR_IS(914)    // 100K B57560G1104F, Calculated using 4.7kohm pullup, voltage divider math, and manufacturer provided temp/resistancebeta25 = 4100 K, R25 = 100 kOhm, Pull-up = 4.7 kOhm, "Hisens"
+  #include "thermistor_914.h"
+#endif
+#if ANY_THERMISTOR_IS(915)    // 50k bed thermistor for 3DP1000. Calculated using 4.7kohm pullup, voltage divider math, and manufacturer provided temp/resistance
+  #include "thermistor_915.h"
+#endif
 #if ANY_THERMISTOR_IS(998)    // User-defined table 1
   #include "thermistor_998.h"
 #endif
